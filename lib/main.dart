@@ -57,6 +57,8 @@ class NoNameTodoApp extends StatelessWidget {
                 (states) => Color(0xffFBDE00)),
           ),
         ),
+
+        // Sliver App Bar theme
       ),
     );
   }
