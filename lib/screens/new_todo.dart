@@ -37,7 +37,7 @@ class _NewTodoModalFormState extends State<NewTodoModalForm> {
           color: Color(0xffFBDE00),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
-            BoxShadow(blurRadius: 10, color: Colors.black54, spreadRadius: 5)
+            BoxShadow(blurRadius: 10, color: Colors.black38, spreadRadius: 5)
           ]),
       child: Form(
         key: _formKey,
