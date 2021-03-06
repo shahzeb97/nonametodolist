@@ -35,9 +35,28 @@ class TodoAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      title: Text('Floating App Bar'),
+      title: Text(
+        'todo list',
+        style: TextStyle(
+          fontSize: 48,
+          fontWeight: FontWeight.w700,
+          color: Color(0xff121212),
+        ),
+      ),
+      flexibleSpace: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 90, 0, 0),
+        child: Text(
+          'may contain tasks',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       floating: true,
-      expandedHeight: 200,
+      pinned: true,
+      expandedHeight: 90,
+      backgroundColor: Color(0xffFBDE00),
     );
   }
 }
