@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nonametodolist/state/todo_model.dart';
 import 'package:provider/provider.dart';
 import 'package:nonametodolist/screens/new_todo.dart';
+import 'package:nonametodolist/models/todo.dart';
 
 class TodoArguments {
   final int todoId;
@@ -73,51 +74,67 @@ class TodoList extends StatelessWidget {
       builder: (context, todoList, child) => SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    value: todoList.todos[index].isDone,
-                    onChanged: (bool newValue) =>
-                        todoList.toggle(todoList.todos[index].id),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 6, 12, 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            todoList.todos[index].title,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w700,
-                              decoration: todoList.todos[index].isDone
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                            ),
-                          ),
-                          Text(
-                            todoList.todos[index].details,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              decoration: todoList.todos[index].isDone
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            return TodoItem(
+              todo: todoList.todos[index],
+              toggleFunc: todoList.toggle,
             );
           },
           childCount: todoList.todos.length,
         ),
+      ),
+    );
+  }
+}
+
+// SINGLE ITEM
+class TodoItem extends StatelessWidget {
+  final Todo todo;
+  final toggleFunc;
+
+  const TodoItem({
+    Key key,
+    this.todo,
+    this.toggleFunc,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+              value: todo.isDone,
+              onChanged: (bool newValue) => toggleFunc(todo.id)),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 6, 12, 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    todo.title,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      decoration:
+                          todo.isDone ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  Text(
+                    todo.details,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      decoration:
+                          todo.isDone ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
