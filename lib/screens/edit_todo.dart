@@ -3,28 +3,33 @@ import 'package:nonametodolist/models/todo.dart';
 import 'package:nonametodolist/state/todo_model.dart';
 import 'package:provider/provider.dart';
 
-class NewTodoModalForm extends StatefulWidget {
-  const NewTodoModalForm({
+class EditTodoModalForm extends StatefulWidget {
+  final Todo todo;
+
+  const EditTodoModalForm({
     Key key,
+    this.todo,
   }) : super(key: key);
 
   @override
-  _NewTodoModalFormState createState() => _NewTodoModalFormState();
+  _EditTodoModalFormState createState() => _EditTodoModalFormState();
 }
 
-class _NewTodoModalFormState extends State<NewTodoModalForm> {
+class _EditTodoModalFormState extends State<EditTodoModalForm> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final detailsController = TextEditingController();
 
-  // Function to add todos
-  void createTodo(addTodo) {
-    var todo = new Todo(
-      title: titleController.text,
-      details: detailsController.text,
-    );
+  void loadTodo(Todo todo) {}
+
+  void editTodo(updateTodo) {
     Navigator.pop(context);
-    addTodo(todo);
+    updateTodo(widget.todo.id, titleController.text, detailsController.text);
+  }
+
+  void deleteTodo(removeTodo) {
+    Navigator.pop(context);
+    removeTodo(widget.todo.id);
   }
 
   @override
@@ -49,33 +54,42 @@ class _NewTodoModalFormState extends State<NewTodoModalForm> {
               TextFormField(
                 // keyboardType: TextInputType.multiline,
                 // maxLines: null,
-                controller: titleController,
+                controller: titleController..text = widget.todo.title,
                 autofocus: true,
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'new todo',
+                  hintText: 'edit todo title',
                 ),
               ),
               TextFormField(
                 // keyboardType: TextInputType.multiline,
                 // maxLines: null,
-                controller: detailsController,
+                controller: detailsController..text = widget.todo.details,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'new todo details',
+                  hintText: 'edit todo details',
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 6),
-                child: ElevatedButton(
-                  child: Text("add"),
-                  onPressed: () => createTodo(todoModel.add),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      child: Text("delete"),
+                      onPressed: () => deleteTodo(todoModel.remove),
+                    ),
+                    ElevatedButton(
+                      child: Text("save"),
+                      onPressed: () => editTodo(todoModel.update),
+                    ),
+                  ],
                 ),
               )
             ],
@@ -83,13 +97,5 @@ class _NewTodoModalFormState extends State<NewTodoModalForm> {
         ),
       ),
     );
-  }
-
-  // Function to dispose text editting controllers
-  @override
-  void dispose() {
-    titleController.dispose();
-    detailsController.dispose();
-    super.dispose();
   }
 }

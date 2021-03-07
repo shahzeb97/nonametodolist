@@ -3,6 +3,7 @@ import 'package:nonametodolist/state/todo_model.dart';
 import 'package:provider/provider.dart';
 import 'package:nonametodolist/screens/new_todo.dart';
 import 'package:nonametodolist/models/todo.dart';
+import 'package:nonametodolist/screens/edit_todo.dart';
 
 class TodoArguments {
   final int todoId;
@@ -107,30 +108,44 @@ class TodoItem extends StatelessWidget {
               value: todo.isDone,
               onChanged: (bool newValue) => toggleFunc(todo.id)),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 6, 12, 6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    todo.title,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      decoration:
-                          todo.isDone ? TextDecoration.lineThrough : null,
+            child: InkWell(
+              highlightColor: Color(0x33121212),
+              onLongPress: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return EditTodoModalForm(
+                      todo: todo,
+                    );
+                  },
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 6, 12, 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      todo.title,
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        decoration:
+                            todo.isDone ? TextDecoration.lineThrough : null,
+                      ),
                     ),
-                  ),
-                  Text(
-                    todo.details,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      decoration:
-                          todo.isDone ? TextDecoration.lineThrough : null,
+                    Text(
+                      todo.details,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        decoration:
+                            todo.isDone ? TextDecoration.lineThrough : null,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
