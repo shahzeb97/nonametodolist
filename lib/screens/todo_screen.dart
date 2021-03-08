@@ -21,9 +21,49 @@ class TodoScreen extends StatelessWidget {
     return Scaffold(
       // Replace this with TodoList() to get original functionality back
       body: CustomScrollView(
-        slivers: <Widget>[TodoAppBar(), TodoList()],
+        slivers: <Widget>[
+          TodoAppBar(),
+          SectionHeader(
+            title: 'unchecked items',
+          ),
+          TodoListNotDone(),
+          SectionHeader(
+            title: 'checked items',
+          ),
+          TodoListDone(),
+        ],
       ),
       floatingActionButton: NewTodoFloatingActionButton(),
+    );
+  }
+}
+
+class SectionHeader extends StatelessWidget {
+  const SectionHeader({
+    Key key,
+    this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        [
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 10, 0, 0),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff121212),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -63,9 +103,9 @@ class TodoAppBar extends StatelessWidget {
   }
 }
 
-// MAIN LIST
-class TodoList extends StatelessWidget {
-  const TodoList({
+// LIST OF INCOMPLETE TODOS
+class TodoListNotDone extends StatelessWidget {
+  const TodoListNotDone({
     Key key,
   }) : super(key: key);
 
@@ -75,12 +115,40 @@ class TodoList extends StatelessWidget {
       builder: (context, todoList, child) => SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return TodoItem(
-              todo: todoList.todos[index],
-              toggleFunc: todoList.toggle,
-            );
+            return todoList.todosNotDone.isEmpty
+                ? null
+                : TodoItem(
+                    todo: todoList.todosNotDone[index],
+                    toggleFunc: todoList.toggle,
+                  );
           },
-          childCount: todoList.todos.length,
+          childCount: todoList.todosNotDone.length,
+        ),
+      ),
+    );
+  }
+}
+
+// LIST OF COMPLETED TODOS
+class TodoListDone extends StatelessWidget {
+  const TodoListDone({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TodoModel>(
+      builder: (context, todoList, child) => SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return todoList.todosDone.isEmpty
+                ? null
+                : TodoItem(
+                    todo: todoList.todosDone[index],
+                    toggleFunc: todoList.toggle,
+                  );
+          },
+          childCount: todoList.todosDone.length,
         ),
       ),
     );

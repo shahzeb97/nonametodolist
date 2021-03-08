@@ -10,6 +10,14 @@ class TodoModel extends ChangeNotifier {
   // An unmodifiable view of todos in the list
   UnmodifiableListView<Todo> get todos => UnmodifiableListView(_todos);
 
+  // An unmodifiable list view of unchecked todos
+  UnmodifiableListView<Todo> get todosNotDone =>
+      UnmodifiableListView(_todos.where((element) => element.isDone == false));
+
+  // An unmodifiable list view of checked todos
+  UnmodifiableListView<Todo> get todosDone =>
+      UnmodifiableListView(_todos.where((element) => element.isDone == true));
+
   // Method to add todo to the list
   void add(Todo todo) {
     todo.id = _todos.length == 0 ? 0 : _todos.last.id + 1;
